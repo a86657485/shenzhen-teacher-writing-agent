@@ -61,6 +61,9 @@ export default function Home() {
   const [notice, setNotice] = useState("");
   const [activeMobileTab, setActiveMobileTab] = useState<"chat" | "library">("chat");
   const [url, setUrl] = useState("");
+  const [manualTitle, setManualTitle] = useState("");
+  const [manualText, setManualText] = useState("");
+  const [manualSourceUrl, setManualSourceUrl] = useState("");
   const [topic, setTopic] = useState("");
   const [stage, setStage] = useState("小学");
   const [subject, setSubject] = useState("美术");
@@ -154,6 +157,37 @@ export default function Home() {
       if (!response.ok) throw new Error(data.error ?? "导入失败");
       setNotice(data.article?.trusted ? "权威文章已导入知识库。" : "网页已导入，但来源不在内置权威站点列表。");
       setUrl("");
+      await loadDocuments();
+    } catch (error) {
+      setNotice(error instanceof Error ? error.message : "导入失败。");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function importManualText(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!manualTitle.trim() || manualText.trim().length < 40) return;
+
+    setBusy(true);
+    setNotice("正在把粘贴正文写入知识库...");
+    try {
+      const response = await fetch("/api/import-text", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          title: manualTitle,
+          text: manualText,
+          sourceUrl: manualSourceUrl,
+          kind: "手动粘贴资料",
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error ?? "导入失败");
+      setNotice("粘贴正文已导入知识库。");
+      setManualTitle("");
+      setManualText("");
+      setManualSourceUrl("");
       await loadDocuments();
     } catch (error) {
       setNotice(error instanceof Error ? error.message : "导入失败。");
@@ -318,6 +352,32 @@ export default function Home() {
             导入
           </button>
         </div>
+      </form>
+
+      <form className="paste-form" onSubmit={importManualText}>
+        <div className="paste-title">
+          <strong>公众号抓不到？粘贴正文入库</strong>
+          <p>在微信里复制标题和正文，粘贴到这里即可加入知识库。</p>
+        </div>
+        <input
+          value={manualTitle}
+          onChange={(event) => setManualTitle(event.target.value)}
+          placeholder="文章标题"
+        />
+        <input
+          value={manualSourceUrl}
+          onChange={(event) => setManualSourceUrl(event.target.value)}
+          placeholder="原文链接，可选"
+        />
+        <textarea
+          value={manualText}
+          onChange={(event) => setManualText(event.target.value)}
+          placeholder="粘贴微信公众号正文或其他网页正文"
+          rows={5}
+        />
+        <button type="submit" disabled={busy || !manualTitle.trim() || manualText.trim().length < 40}>
+          写入知识库
+        </button>
       </form>
 
       <div className="doc-list">
