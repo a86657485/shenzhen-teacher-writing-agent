@@ -1,0 +1,15 @@
+node_modules
+.next
+.playwright-cli
+out
+output
+dist
+coverage
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
