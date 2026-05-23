@@ -10,6 +10,7 @@
     "start": "next start",
     "start:lan": "next start --hostname 0.0.0.0",
     "lint": "next lint",
+    "doctor": "tsx scripts/doctor.ts",
     "seed": "tsx scripts/seed.ts"
   },
   "dependencies": {

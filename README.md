@@ -37,6 +37,89 @@ pnpm approve-builds --all
 pnpm rebuild better-sqlite3
 ```
 
+## Windows 本地部署
+
+建议使用 PowerShell。
+
+1. 安装依赖环境：
+
+```powershell
+winget install Git.Git
+winget install OpenJS.NodeJS.LTS
+corepack enable
+corepack prepare pnpm@10.32.0 --activate
+```
+
+如果 PowerShell 提示不允许运行脚本，执行一次：
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser RemoteSigned
+```
+
+2. 拉取项目：
+
+```powershell
+git clone https://github.com/a86657485/shenzhen-teacher-writing-agent.git
+cd shenzhen-teacher-writing-agent
+```
+
+3. 安装依赖并创建环境变量文件：
+
+```powershell
+pnpm install
+Copy-Item .env.example .env.local
+notepad .env.local
+```
+
+在 `.env.local` 里填入 DeepSeek API key。不要把 `.env.local` 上传到 GitHub。
+
+4. 运行部署检查：
+
+```powershell
+pnpm run doctor
+```
+
+如果 `better-sqlite3` 报错，先执行：
+
+```powershell
+pnpm approve-builds --all
+pnpm rebuild better-sqlite3
+pnpm run doctor
+```
+
+如果仍然失败，安装 Visual Studio Build Tools 2022，并勾选 `Desktop development with C++`，然后重新运行：
+
+```powershell
+pnpm rebuild better-sqlite3
+```
+
+5. 导入范文知识库并启动：
+
+```powershell
+pnpm seed
+pnpm dev:lan
+```
+
+电脑访问：
+
+```text
+http://localhost:3000
+```
+
+手机同一 Wi-Fi 访问时，先查看 Windows 局域网 IPv4：
+
+```powershell
+ipconfig
+```
+
+找到类似 `192.168.x.x` 的 IPv4 地址，然后手机打开：
+
+```text
+http://你的Windows电脑IPv4:3000
+```
+
+如果手机打不开，检查 Windows 防火墙是否允许 Node.js 或端口 3000 的局域网访问。
+
 ## 导入范文知识库
 
 仓库根目录中的 5 篇 `.docx` 是高分范文风格库。首次运行前导入：
