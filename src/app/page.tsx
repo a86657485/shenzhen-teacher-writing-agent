@@ -415,7 +415,7 @@ export default function Home() {
           onClick={() => setActiveMobileTab("library")}
         >
           <Database size={17} />
-          资料
+          资料/网址
         </button>
       </nav>
 
@@ -435,6 +435,22 @@ export default function Home() {
               {stage} · {subject}
             </div>
           </div>
+
+          <form className="mobile-url-shortcut" onSubmit={importUrl}>
+            <label htmlFor="mobile-url">导入文章网址</label>
+            <div className="input-row">
+              <LinkIcon size={17} />
+              <input
+                id="mobile-url"
+                value={url}
+                onChange={(event) => setUrl(event.target.value)}
+                placeholder="粘贴教育部、深圳教育局等文章链接"
+              />
+              <button type="submit" disabled={busy || !url.trim()} title="导入链接">
+                导入
+              </button>
+            </div>
+          </form>
 
           <div className="messages">
             {messages.map((message) => (

@@ -253,6 +253,7 @@ h2 {
 }
 
 .url-form,
+.mobile-url-shortcut,
 .settings-panel label {
   display: grid;
   gap: 7px;
@@ -459,6 +460,10 @@ h2 {
   display: none;
 }
 
+.mobile-url-shortcut {
+  display: none;
+}
+
 .status-bar {
   position: fixed;
   right: 18px;
@@ -547,19 +552,51 @@ h2 {
   }
 
   .left-rail.mobile-visible {
-    display: grid;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow: auto;
   }
 
   .chat-panel.mobile-visible {
     display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
   }
 
   .panel {
     padding: 13px;
   }
 
+  .library-panel {
+    flex: none;
+    overflow: visible;
+  }
+
+  .settings-panel {
+    flex: none;
+  }
+
+  .doc-list {
+    overflow: visible;
+    min-height: auto;
+  }
+
   .chat-header {
     padding: 13px;
+  }
+
+  .mobile-url-shortcut {
+    display: grid;
+    gap: 8px;
+    padding: 10px;
+    border-bottom: 1px solid var(--line);
+    background: #f4fbf7;
+  }
+
+  .mobile-url-shortcut label {
+    color: var(--green);
+    font-size: 13px;
+    font-weight: 800;
   }
 
   .messages {
